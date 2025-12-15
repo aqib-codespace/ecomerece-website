@@ -16,7 +16,7 @@ const sidebarLinks = [
   { name: "Settings", path: "/dashboard/settings", icon: Settings },
 ];
 
-const DashboardLayout = () => {
+const DashboardLayout = ({children}) => {
   const pathname = usePathname();
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
