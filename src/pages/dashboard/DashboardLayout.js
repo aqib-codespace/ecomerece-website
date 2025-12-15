@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
   User, Package, Heart, Settings, LogOut, 
@@ -16,8 +17,8 @@ const sidebarLinks = [
 ];
 
 const DashboardLayout = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -60,10 +61,10 @@ const DashboardLayout = () => {
                   {sidebarLinks.map((link) => (
                     <Link
                       key={link.path}
-                      to={link.path}
+                      href={link.path}
                       onClick={() => setIsSidebarOpen(false)}
                       className={`flex items-center justify-between p-3 rounded-xl transition-all ${
-                        location.pathname === link.path
+                        pathname === link.path
                           ? "bg-primary/10 text-primary"
                           : "hover:bg-secondary text-muted-foreground hover:text-foreground"
                       }`}
@@ -81,7 +82,7 @@ const DashboardLayout = () => {
                 <Button
                   variant="ghost"
                   className="w-full justify-start mt-6 text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => navigate("/login")}
+                  onClick={() => router.push("/login")}
                 >
                   <LogOut className="h-5 w-5 mr-3" />
                   Logout
@@ -98,9 +99,8 @@ const DashboardLayout = () => {
             />
           )}
 
-          {/* Main Content */}
           <main className="flex-1 min-w-0">
-            <Outlet />
+            {children}
           </main>
         </div>
       </div>

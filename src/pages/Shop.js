@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, Grid3X3, LayoutList, Heart, ShoppingCart, Star, ChevronDown } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
@@ -113,7 +113,7 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedPriceRange, setSelectedPriceRange] = useState("All");
   const [sortBy, setSortBy] = useState("featured");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState("grid");
   const [showFilters, setShowFilters] = useState(false);
 
   const filteredProducts = allProducts.filter((product) => {

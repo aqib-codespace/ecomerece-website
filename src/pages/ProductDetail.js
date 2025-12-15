@@ -1,5 +1,7 @@
+"use client";
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Heart, ShoppingCart, Star, Minus, Plus, ChevronRight, Truck, Shield, RefreshCw } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
@@ -56,7 +58,7 @@ const relatedProducts = [
 ];
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const router = useRouter();
   const { toast } = useToast();
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
@@ -72,7 +74,6 @@ const ProductDetail = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
           <ChevronRight className="h-4 w-4" />
@@ -82,7 +83,6 @@ const ProductDetail = () => {
         </nav>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Product Images */}
           <div className="space-y-4">
             <motion.div
               key={selectedImage}
@@ -255,7 +255,7 @@ const ProductDetail = () => {
             {relatedProducts.map((item) => (
               <Link
                 key={item.id}
-                to={`/product/${item.id}`}
+                href={`/product/${item.id}`}
                 className="group glass-hover rounded-2xl overflow-hidden"
               >
                 <div className="aspect-square overflow-hidden">
