@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CheckCircle2, Package, ArrowRight } from "lucide-react";
-import { Layout } from "../../../components/layout/Layout";
-import { Button } from "../../../components/ui/button";
+import { Layout } from "@/components/layout/Layout";
+import { Button } from "@/components/ui/button";
+
 
 export default function OrderConfirmationPage() {
   const orderId =
