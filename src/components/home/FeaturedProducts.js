@@ -6,50 +6,50 @@ import { Button } from "@/components/ui/button";
 const products = [
   {
     id: 1,
-    name: "Premium Wireless Headphones",
+    name: "Boys Mens Silver Locket Necklace",
     price: 299,
     originalPrice: 399,
     rating: 4.9,
     reviews: 128,
     image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
-    category: "Electronics",
+      "/products/locket.webp",
+    category: "Fashion",
     isNew: true,
   },
   {
     id: 2,
-    name: "Minimalist Watch Collection",
+    name: "Turkish Greek Pattern Ring",
     price: 189,
     originalPrice: null,
     rating: 4.8,
     reviews: 95,
     image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+      "/products/ring.webp",
     category: "Accessories",
     isNew: false,
   },
   {
     id: 3,
-    name: "Designer Sunglasses",
+    name: "Refillable Premium Slim and Sleek Classy Windproof Lighter",
     price: 159,
     originalPrice: 199,
     rating: 4.7,
     reviews: 64,
     image:
-      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
-    category: "Fashion",
+      "/products/lighter.jpg",
+    category: "Accessories",
     isNew: true,
   },
   {
     id: 4,
-    name: "Smart Fitness Tracker",
+    name: "Premium Black Bracelet",
     price: 249,
     originalPrice: null,
     rating: 4.9,
     reviews: 203,
     image:
-      "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400&h=400&fit=crop",
-    category: "Electronics",
+      "/products/bracelet.webp",
+    category: "Fashion",
     isNew: false,
   },
 ];
@@ -72,7 +72,7 @@ const itemVariants = {
 export const FeaturedProducts = () => {
   return (
     <section className="py-20 md:py-32 bg-gradient-to-b from-background via-blue-lightest/10 to-background">
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
           <div>
             <motion.span
@@ -121,7 +121,6 @@ export const FeaturedProducts = () => {
               className="group"
             >
               <div className="glass-card overflow-hidden hover:border-blue-primary/30 transition-all duration-300">
-                {/* Image Container */}
                 <div className="relative aspect-square overflow-hidden">
                   <img
                     src={product.image}
@@ -130,7 +129,6 @@ export const FeaturedProducts = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                  {/* Badges */}
                   <div className="absolute top-4 left-4 flex flex-col gap-2">
                     {product.isNew && (
                       <span className="px-3 py-1.5 bg-gradient-accent text-white text-xs font-bold rounded-lg shadow-lg animate-pulse">
@@ -144,7 +142,6 @@ export const FeaturedProducts = () => {
                     )}
                   </div>
 
-                  {/* Quick Actions */}
                   <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
                     <Button
                       className="h-10 w-10 glass-button hover:bg-orange-primary hover:text-white shadow-lg"
@@ -154,7 +151,6 @@ export const FeaturedProducts = () => {
                     </Button>
                   </div>
 
-                  {/* Add to Cart Overlay */}
                   <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <Button className="w-full btn-primary">
                       <ShoppingCart className="h-4 w-4 mr-2" />
@@ -163,7 +159,6 @@ export const FeaturedProducts = () => {
                   </div>
                 </div>
 
-                {/* Product Info */}
                 <div className="p-5">
                   <span className="text-xs text-blue-primary font-semibold uppercase tracking-wider">
                     {product.category}
@@ -174,7 +169,6 @@ export const FeaturedProducts = () => {
                     </h3>
                   </Link>
 
-                  {/* Rating */}
                   <div className="flex items-center gap-2 mt-3">
                     <div className="flex items-center gap-1">
                       {[...Array(5)].map((_, i) => (

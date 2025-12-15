@@ -23,7 +23,7 @@ export const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 animate-fade-in">
       <div className="glass border-b border-blue-primary/10">
-        <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8">
+        <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-20 md:h-24">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
@@ -193,7 +193,7 @@ export const Header = () => {
             transition={{ duration: 0.3 }}
             className="md:hidden glass border-b border-blue-primary/10 overflow-hidden"
           >
-            <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 py-6">
+            <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-6">
               <div className="mb-6">
                 <Input
                   placeholder="Search products..."

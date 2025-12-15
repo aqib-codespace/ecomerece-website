@@ -1,13 +1,20 @@
+"use client";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, Minus, Plus, ArrowRight, ShoppingBag, Tag } from "lucide-react";
-import { Layout } from "@/components/layout/Layout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  Trash2,
+  Minus,
+  Plus,
+  ArrowRight,
+  ShoppingBag,
+  Tag,
+} from "lucide-react";
+
 import { useToast } from "@/hooks/use-toast";
-
-
+import { Layout } from "@/components/layout/Layout";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const initialCart = [
   {
@@ -15,7 +22,8 @@ const initialCart = [
     name: "Premium Wireless Headphones",
     price: 299,
     quantity: 1,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop",
     color: "Black",
   },
   {
@@ -23,7 +31,8 @@ const initialCart = [
     name: "Minimalist Watch Collection",
     price: 189,
     quantity: 2,
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop",
     color: "Silver",
   },
   {
@@ -31,12 +40,13 @@ const initialCart = [
     name: "Designer Sunglasses",
     price: 159,
     quantity: 1,
-    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop",
     color: "Brown",
   },
 ];
 
-const Cart = () => {
+export default function Cart() {
   const { toast } = useToast();
   const [cartItems, setCartItems] = useState(initialCart);
   const [promoCode, setPromoCode] = useState("");
@@ -75,7 +85,10 @@ const Cart = () => {
     }
   };
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const discountAmount = (subtotal * discount) / 100;
   const shipping = subtotal > 100 ? 0 : 9.99;
   const total = subtotal - discountAmount + shipping;
@@ -83,7 +96,7 @@ const Cart = () => {
   if (cartItems.length === 0) {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-20">
+        <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-20">
           <div className="text-center max-w-md mx-auto">
             <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center mx-auto mb-6">
               <ShoppingBag className="h-12 w-12 text-muted-foreground" />
@@ -92,10 +105,9 @@ const Cart = () => {
             <p className="text-muted-foreground mb-8">
               Looks like you haven't added any items to your cart yet.
             </p>
-            <Button variant="hero" size="lg" asChild>
+            <Button variant="hero" size="lg">
               <Link href="/shop">
-                Start Shopping
-                <ArrowRight className="h-4 w-4 ml-2" />
+                Start Shopping <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </Button>
           </div>
@@ -106,11 +118,10 @@ const Cart = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-8">Shopping Cart</h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             <AnimatePresence mode="popLayout">
               {cartItems.map((item) => (
@@ -134,7 +145,7 @@ const Cart = () => {
                       <div className="flex justify-between gap-4">
                         <div>
                           <Link
-                            to={`/product/${item.id}`}
+                            href={`/product/${item.id}`}
                             className="font-semibold hover:text-primary transition-colors line-clamp-1"
                           >
                             {item.name}
@@ -158,7 +169,9 @@ const Cart = () => {
                             variant="ghost"
                             size="icon"
                             className="h-9 w-9"
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity - 1)
+                            }
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
@@ -169,7 +182,9 @@ const Cart = () => {
                             variant="ghost"
                             size="icon"
                             className="h-9 w-9"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.id, item.quantity + 1)
+                            }
                           >
                             <Plus className="h-4 w-4" />
                           </Button>
@@ -185,12 +200,10 @@ const Cart = () => {
             </AnimatePresence>
           </div>
 
-          {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="glass rounded-2xl p-6 sticky top-24">
               <h2 className="text-xl font-bold mb-6">Order Summary</h2>
 
-              {/* Promo Code */}
               <div className="mb-6">
                 <label className="text-sm text-muted-foreground mb-2 block">
                   Promo Code
@@ -216,7 +229,6 @@ const Cart = () => {
                 )}
               </div>
 
-              {/* Price Breakdown */}
               <div className="space-y-3 pb-6 border-b border-border">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
@@ -230,11 +242,12 @@ const Cart = () => {
                 )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                  <span>
+                    {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                  </span>
                 </div>
               </div>
 
-              {/* Total */}
               <div className="flex justify-between items-center py-6">
                 <span className="text-lg font-semibold">Total</span>
                 <span className="text-2xl font-bold gradient-text">
@@ -242,10 +255,9 @@ const Cart = () => {
                 </span>
               </div>
 
-              <Button variant="hero" size="xl" className="w-full" asChild>
+              <Button variant="hero" size="xl" className="w-full">
                 <Link href="/checkout">
-                  Proceed to Checkout
-                  <ArrowRight className="h-5 w-5 ml-2" />
+                  Proceed to Checkout <ArrowRight className="h-5 w-5 ml-2" />
                 </Link>
               </Button>
 
@@ -258,6 +270,4 @@ const Cart = () => {
       </div>
     </Layout>
   );
-};
-
-export default Cart;
+}

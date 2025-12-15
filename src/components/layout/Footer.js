@@ -34,15 +34,14 @@ const socialLinks = [
 export const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-background to-blue-lightest/20 border-t border-blue-primary/10">
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 py-16 md:py-20">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-16 mb-12">
-          {/* Brand & Newsletter */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
               <img
                 src="/images/logo.png"
                 alt="TrioCart"
-                className="h-12 w-auto"
+                className="h-24 w-auto"
               />
             </Link>
             <p className="text-foreground-secondary mb-8 max-w-sm leading-relaxed">

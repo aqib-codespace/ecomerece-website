@@ -36,7 +36,7 @@ const categories = [
 export const CategoriesSection = () => {
   return (
     <section className="py-20 md:py-32 bg-gradient-to-b from-background via-orange-primary/5 to-background">
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8">
         <div className="text-center mb-16">
           <motion.span
             initial={{ opacity: 0, y: 20 }}

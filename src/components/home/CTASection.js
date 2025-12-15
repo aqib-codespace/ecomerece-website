@@ -10,7 +10,7 @@ export const CTASection = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-blue-primary/10 via-background to-orange-primary/10" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-primary/10 rounded-full blur-[128px]" />
 
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 relative z-10">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -72,7 +72,7 @@ export const CTASection = () => {
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
-                className="glass-button h-12 px-8 text-base font-semibold"
+                className="glass-button hover:text-blue-primary h-12 px-8 text-base font-semibold"
                 asChild
               >
                 <Link href="/shop">Browse Products</Link>

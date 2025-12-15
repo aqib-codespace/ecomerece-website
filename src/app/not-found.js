@@ -22,7 +22,7 @@ export default function NotFound() {
       </div>
 
       {/* Content */}
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 relative z-10">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 relative z-10">
         <div className="max-w-2xl mx-auto text-center">
           {/* Logo */}
           <motion.div

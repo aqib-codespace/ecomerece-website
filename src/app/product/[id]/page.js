@@ -84,7 +84,7 @@ export default function Page({ params }) {
 
   return (
     <Layout>
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 py-8">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-8">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <Link href="/" className="hover:text-foreground transition-colors">
             Home

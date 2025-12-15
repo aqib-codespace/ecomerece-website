@@ -29,7 +29,7 @@ export default function DashboardLayout({ children }) {
 
   return (
     <Layout>
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 py-8">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-8">
         <div className="flex gap-8">
           <Button
             variant="glass"

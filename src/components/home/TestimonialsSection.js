@@ -9,7 +9,7 @@ const testimonials = [
     avatar:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
     content:
-      "LUXE has completely transformed my shopping experience. The quality of products and attention to detail is unmatched. I've been a loyal customer for over 2 years now.",
+      "TrioCart has completely transformed my shopping experience. The quality of products and attention to detail is unmatched. I've been a loyal customer for over 2 years now.",
     rating: 5,
   },
   {
@@ -37,7 +37,7 @@ const testimonials = [
 export const TestimonialsSection = () => {
   return (
     <section className="py-20 md:py-32 bg-gradient-to-b from-background via-blue-lightest/10 to-background">
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8">
         <div className="text-center mb-16">
           <motion.span
             initial={{ opacity: 0, y: 20 }}

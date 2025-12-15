@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 export const HeroSection = () => {
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-blue-lightest/30 via-background to-orange-primary/10">
-      {/* Background Elements */}
       <div className="absolute inset-0 bg-hero-gradient" />
       <div className="absolute top-1/4 -left-32 w-96 h-96 bg-blue-primary/20 rounded-full blur-[128px] animate-float" />
       <div
@@ -14,7 +13,6 @@ export const HeroSection = () => {
         style={{ animationDelay: "1s" }}
       />
 
-      {/* Floating Glass Elements */}
       <motion.div
         animate={{ y: [0, -20, 0], rotate: [12, 18, 12] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -42,9 +40,8 @@ export const HeroSection = () => {
         style={{ borderRadius: "30%" }}
       />
 
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 relative z-10 py-12">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 relative z-10 py-12">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
           <div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -54,7 +51,7 @@ export const HeroSection = () => {
             >
               <Sparkles className="h-5 w-5 text-orange-primary animate-pulse" />
               <span className="text-sm font-semibold text-blue-primary">
-                New Collection 2024
+                New Collection 2026
               </span>
             </motion.div>
 
@@ -62,7 +59,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6"
+              className="text-5xl md:text-6xl font-bold leading-tight mb-6"
             >
               Discover <span className="gradient-text">Premium</span>
               <br />
@@ -114,7 +111,6 @@ export const HeroSection = () => {
               </motion.div>
             </motion.div>
 
-            {/* Stats */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -122,8 +118,8 @@ export const HeroSection = () => {
               className="flex flex-wrap gap-8 md:gap-12 mt-16"
             >
               {[
-                { value: "50K+", label: "Happy Customers" },
-                { value: "1000+", label: "Premium Products" },
+                { value: "50+", label: "Happy Customers" },
+                { value: "100+", label: "Premium Products" },
                 { value: "99%", label: "Satisfaction Rate" },
               ].map((stat, index) => (
                 <motion.div
@@ -142,7 +138,6 @@ export const HeroSection = () => {
             </motion.div>
           </div>
 
-          {/* Right Image */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -158,37 +153,8 @@ export const HeroSection = () => {
                 />
               </div>
 
-              {/* Floating Product Card */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute -bottom-6 -left-6 glass-card p-4 rounded-2xl w-56 shadow-2xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden">
-                    <img
-                      src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop"
-                      alt="Product"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold">Trending</p>
-                    <p className="text-xs text-foreground-secondary">
-                      Wireless Headphones
-                    </p>
-                    <p className="text-sm font-bold text-orange-primary mt-1">
-                      $299
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+              
 
-              {/* Floating Badge */}
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{

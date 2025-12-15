@@ -173,7 +173,7 @@ export const ShopPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-lightest/20 via-background to-orange-primary/5">
-      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 py-12">
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-12">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
