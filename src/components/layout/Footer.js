@@ -25,31 +25,36 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: Facebook, href: "#" },
-  { icon: Twitter, href: "#" },
-  { icon: Instagram, href: "#" },
-  { icon: Youtube, href: "#" },
+  { icon: Facebook, href: "#", label: "Facebook" },
+  { icon: Twitter, href: "#", label: "Twitter" },
+  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Youtube, href: "#", label: "Youtube" },
 ];
 
 export const Footer = () => {
   return (
-    <footer className="bg-card/50 border-t border-white/5">
-      <div className="container mx-auto px-4 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+    <footer className="bg-gradient-to-b from-background to-blue-lightest/20 border-t border-blue-primary/10">
+      <div className="w-full md:w-[90%] max-w-[1800px] mx-auto px-4 md:px-8 py-16 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-16 mb-12">
           {/* Brand & Newsletter */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold gradient-text">LUXE</span>
+            <Link href="/" className="inline-block mb-6">
+              <img
+                src="/images/logo.png"
+                alt="TrioCart"
+                className="h-12 w-auto"
+              />
             </Link>
-            <p className="text-muted-foreground mb-6 max-w-sm">
-              Discover premium products that elevate your lifestyle. Quality meets elegance in every item we curate.
+            <p className="text-foreground-secondary mb-8 max-w-sm leading-relaxed">
+              Discover premium products that elevate your lifestyle. Quality
+              meets elegance in every item we curate.
             </p>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Input
                 placeholder="Enter your email"
-                className="bg-secondary/50 border-white/10 max-w-xs"
+                className="glass border-blue-primary/30 focus:border-blue-primary h-12 max-w-xs"
               />
-              <Button variant="hero">
+              <Button className="btn-accent h-12 px-6">
                 <Mail className="h-4 w-4" />
               </Button>
             </div>
@@ -57,13 +62,13 @@ export const Footer = () => {
 
           {/* Shop Links */}
           <div>
-            <h3 className="font-semibold mb-4">Shop</h3>
-            <ul className="space-y-2">
+            <h3 className="font-bold text-lg mb-6 text-blue-primary">Shop</h3>
+            <ul className="space-y-3">
               {footerLinks.shop.map((link) => (
                 <li key={link.path}>
                   <Link
                     href={link.path}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-foreground-secondary hover:text-blue-primary transition-colors font-medium"
                   >
                     {link.name}
                   </Link>
@@ -74,13 +79,15 @@ export const Footer = () => {
 
           {/* Support Links */}
           <div>
-            <h3 className="font-semibold mb-4">Support</h3>
-            <ul className="space-y-2">
+            <h3 className="font-bold text-lg mb-6 text-orange-primary">
+              Support
+            </h3>
+            <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.path}>
                   <Link
                     href={link.path}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-foreground-secondary hover:text-orange-primary transition-colors font-medium"
                   >
                     {link.name}
                   </Link>
@@ -91,13 +98,15 @@ export const Footer = () => {
 
           {/* Company Links */}
           <div>
-            <h3 className="font-semibold mb-4">Company</h3>
-            <ul className="space-y-2">
+            <h3 className="font-bold text-lg mb-6 text-blue-primary">
+              Company
+            </h3>
+            <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.path}>
                   <Link
                     href={link.path}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-foreground-secondary hover:text-blue-primary transition-colors font-medium"
                   >
                     {link.name}
                   </Link>
@@ -108,16 +117,17 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-muted-foreground text-sm">
-            © 2024 LUXE. All rights reserved.
+        <div className="pt-8 border-t border-blue-primary/10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <p className="text-foreground-secondary text-sm font-medium">
+            © 2024 TrioCart. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             {socialLinks.map((social, index) => (
               <a
                 key={index}
                 href={social.href}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={social.label}
+                className="h-10 w-10 rounded-full glass-button flex items-center justify-center text-foreground-secondary hover:text-white hover:bg-blue-primary hover:scale-110 hover:shadow-glow-blue transition-all duration-300"
               >
                 <social.icon className="h-5 w-5" />
               </a>
