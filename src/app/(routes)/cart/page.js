@@ -1,4 +1,5 @@
-import CartPage from "@/pages/CartPage";
+"use client";
+import CartPage from "@/page-components/CartPage";
 
 export default function Page() {
   return <CartPage />;
