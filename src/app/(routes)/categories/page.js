@@ -1,12 +1,5 @@
-import CategoriesPage from '@/pages/CategoriesPage'
-import React from 'react'
+import CategoriesPage from "@/pages/CategoriesPage";
 
-const page = () => {
-  return (
-    <div>
-      <CategoriesPage/>
-    </div>
-  )
+export default function Page() {
+  return <CategoriesPage />;
 }
-
-export default page

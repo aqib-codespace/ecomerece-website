@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, Heart, User, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -19,13 +21,16 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
+  const { getCartCount } = useCart();
+
+  const isLoggedIn = pathname.startsWith("/dashboard");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 animate-fade-in">
       <div className="glass border-b border-blue-primary/10">
         <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-20 md:h-24">
-            {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
               <motion.img
                 src="/images/logo.png"
@@ -36,7 +41,6 @@ export const Header = () => {
               />
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => (
                 <Link
@@ -62,6 +66,31 @@ export const Header = () => {
                   )}
                 </Link>
               ))}
+
+              {/* Show Dashboard link when logged in */}
+              {isLoggedIn && (
+                <Link
+                  href="/dashboard"
+                  className={`relative px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-lg ${
+                    pathname.startsWith("/dashboard")
+                      ? "text-blue-primary"
+                      : "text-foreground-secondary hover:text-blue-primary hover:bg-blue-lightest/50"
+                  }`}
+                >
+                  Dashboard
+                  {pathname.startsWith("/dashboard") && (
+                    <motion.div
+                      layoutId="activeNav"
+                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-primary rounded-full"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </Link>
+              )}
             </nav>
 
             {/* Desktop Actions */}
@@ -126,9 +155,11 @@ export const Header = () => {
                 >
                   <Link href="/cart">
                     <ShoppingCart className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-accent text-white text-xs font-bold flex items-center justify-center animate-pulse">
-                      3
-                    </span>
+                    {getCartCount() > 0 && (
+                      <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-accent text-white text-xs font-bold flex items-center justify-center animate-pulse">
+                        {getCartCount()}
+                      </span>
+                    )}
                   </Link>
                 </Button>
               </motion.div>
@@ -137,12 +168,21 @@ export const Header = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button className="btn-primary h-10 px-6" asChild>
-                  <Link href="/login">
-                    <User className="h-4 w-4 mr-2" />
-                    Sign In
-                  </Link>
-                </Button>
+                {isAuthenticated ? (
+                  <Button className="btn-primary h-10 px-6" asChild>
+                    <Link href="/dashboard">
+                      <User className="h-4 w-4 mr-2" />
+                      Dashboard
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button className="btn-primary h-10 px-6" asChild>
+                    <Link href="/login">
+                      <User className="h-4 w-4 mr-2" />
+                      Sign In
+                    </Link>
+                  </Button>
+                )}
               </motion.div>
             </div>
 
@@ -157,9 +197,11 @@ export const Header = () => {
                 >
                   <Link href="/cart">
                     <ShoppingCart className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-accent text-white text-[10px] font-bold flex items-center justify-center">
-                      3
-                    </span>
+                    {getCartCount() > 0 && (
+                      <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-accent text-white text-[10px] font-bold flex items-center justify-center">
+                        {getCartCount()}
+                      </span>
+                    )}
                   </Link>
                 </Button>
               </motion.div>

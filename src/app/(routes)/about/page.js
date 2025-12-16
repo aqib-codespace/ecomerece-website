@@ -1,12 +1,5 @@
-import AboutPage from '@/pages/AboutPage'
-import React from 'react'
+import AboutPage from "@/pages/AboutPage";
 
-const page = () => {
-  return (
-    <div>
-      <AboutPage/>
-    </div>
-  )
+export default function Page() {
+  return <AboutPage />;
 }
-
-export default page

@@ -1,12 +1,5 @@
-import Cart from '@/pages/CartPage'
-import React from 'react'
+import CartPage from "@/pages/CartPage";
 
-const page = () => {
-  return (
-    <div>
-      <Cart/>
-    </div>
-  )
+export default function Page() {
+  return <CartPage />;
 }
-
-export default page

@@ -1,12 +1,5 @@
-import CheckOut from '@/pages/Checkout'
-import React from 'react'
+import CheckOut from "@/pages/Checkout";
 
-const page = () => {
-  return (
-    <div>
-      <CheckOut/>
-    </div>
-  )
+export default function Page() {
+  return <CheckOut />;
 }
-
-export default page

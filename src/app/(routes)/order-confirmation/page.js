@@ -1,12 +1,5 @@
-import OrderConfirmationPage from '@/pages/OrderConfirmation'
-import React from 'react'
+import OrderConfirmationPage from "@/pages/OrderConfirmation";
 
-const page = () => {
-  return (
-    <div>
-      <OrderConfirmationPage/>
-    </div>
-  )
+export default function Page() {
+  return <OrderConfirmationPage />;
 }
-
-export default page
