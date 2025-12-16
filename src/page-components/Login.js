@@ -11,7 +11,6 @@ import {
   EyeOff,
   Mail,
   Lock,
-  User,
   ArrowRight,
   ShoppingBag,
   TrendingUp,
@@ -21,31 +20,20 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { signIn } from "@/lib/auth";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-const registerSchema = z
-  .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+
 
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { login } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -53,43 +41,23 @@ export default function LoginPage() {
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
-    resolver: zodResolver(isLogin ? loginSchema : registerSchema),
+    resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data) => {
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const userData = {
-        id: Date.now(),
-        name: data.name || "John Doe",
-        email: data.email,
-      };
-
-      login(userData);
-
-      toast({
-        title: isLogin ? "Welcome back!" : "Account created!",
-        description: isLogin
-          ? "You have successfully logged in."
-          : "Your account has been created successfully.",
-      });
-
+      const { data: res, error } = await signIn({ email: data.email, password: data.password });
+      if (error) throw error;
+      const user = res.user || res.session?.user;
+      login(user);
+      toast({ title: "Welcome back!", description: "You have successfully logged in." });
       router.push("/dashboard");
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error?.message || "Something went wrong. Please try again.", variant: "destructive" });
     }
   };
 
-  const toggleMode = () => {
-    setIsLogin(!isLogin);
-    reset();
-  };
+
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 lg:p-8">
@@ -98,7 +66,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-blue-primary via-blue-dark to-blue-primary relative overflow-hidden"
+          className="hidden lg:flex flex-col justify-between p-12 bg-linear-to-br from-blue-primary via-blue-dark to-blue-primary relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-orange-primary/20 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-lighter/30 rounded-full blur-3xl" />
@@ -193,35 +161,12 @@ export default function LoginPage() {
           </Link>
 
           <div className="mb-8">
-            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">
-              {isLogin ? "Welcome Back!" : "Create Account"}
-            </h1>
-            <p className="text-foreground-secondary">
-              {isLogin
-                ? "Sign in to access your account"
-                : "Join us and start shopping today"}
-            </p>
+            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">Welcome Back!</h1>
+            <p className="text-foreground-secondary">Sign in to access your account</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {!isLogin && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground-secondary" />
-                  <Input
-                    {...register("name")}
-                    placeholder="John Doe"
-                    className="pl-10 h-12"
-                  />
-                </div>
-                {errors.name && (
-                  <p className="text-sm text-red-600">{errors.name.message}</p>
-                )}
-              </div>
-            )}
+
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">
@@ -272,49 +217,16 @@ export default function LoginPage() {
               )}
             </div>
 
-            {!isLogin && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground-secondary" />
-                  <Input
-                    {...register("confirmPassword")}
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    className="pl-10 pr-10 h-12"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-secondary hover:text-foreground"
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className="text-sm text-red-600">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
-            )}
 
-            {isLogin && (
-              <div className="flex justify-end">
-                <Link
-                  href="/forgot-password"
-                  className="text-sm text-blue-primary hover:text-blue-dark transition-colors"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-            )}
+
+            <div className="flex justify-end">
+              <Link
+                href="/forgot-password"
+                className="text-sm text-blue-primary hover:text-blue-dark transition-colors"
+              >
+                Forgot password?
+              </Link>
+            </div>
 
             <Button
               type="submit"
@@ -323,14 +235,9 @@ export default function LoginPage() {
             >
               {isSubmitting ? (
                 "Please wait..."
-              ) : isLogin ? (
-                <>
-                  Sign In
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </>
               ) : (
                 <>
-                  Create Account
+                  Sign In
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}
@@ -338,15 +245,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-8 text-center">
-            <p className="text-foreground-secondary">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-              <button
-                onClick={toggleMode}
-                className="text-blue-primary hover:text-blue-dark font-semibold transition-colors"
-              >
-                {isLogin ? "Sign up" : "Sign in"}
-              </button>
-            </p>
+            <p className="text-foreground-secondary">Don't have an account? <Link href="/signup" className="text-blue-primary hover:text-blue-dark font-semibold transition-colors">Sign up</Link></p>
           </div>
 
           {/* Back to Home */}

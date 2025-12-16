@@ -36,7 +36,7 @@ const products = [
     rating: 4.7,
     reviews: 64,
     image:
-      "/products/lighter.jpg",
+      "/products/lighter.png",
     category: "Accessories",
     isNew: true,
   },

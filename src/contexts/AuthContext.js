@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 
 const AuthContext = createContext({});
 
@@ -18,11 +19,28 @@ export function AuthProvider({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    // Initialize from Supabase session
+    const session = supabase.auth.getSession().then((res) => {
+      if (res?.data?.session?.user) {
+        setUser(res.data.session.user);
+      }
+      setIsLoading(false);
+    });
+
+    // Listen to auth state changes
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        localStorage.setItem("user", JSON.stringify(session.user));
+      } else {
+        setUser(null);
+        localStorage.removeItem("user");
+      }
+    });
+
+    return () => {
+      listener?.subscription?.unsubscribe?.();
+    };
   }, []);
 
   const login = (userData) => {
@@ -30,7 +48,8 @@ export function AuthProvider({ children }) {
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("cart");
