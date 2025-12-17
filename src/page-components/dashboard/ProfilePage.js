@@ -1,285 +1,289 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
-import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Edit2,
-  Camera,
-  Save,
-  X,
-} from "lucide-react";
+import { useDropzone } from "react-dropzone";
+import { User, Mail, Camera, Upload, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { selectUser, updateUser } from "@/store/slices/userSlice";
 
 export default function ProfilePage() {
   const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const [isLoading, setIsLoading] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(
+    user?.user_metadata?.avatar_url || null
+  );
+
   const [formData, setFormData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john@example.com",
-    phone: "+1 234 567 890",
-    address: "123 Main St, New York, NY 10001",
+    firstName: user?.user_metadata?.firstName || "",
+    lastName: user?.user_metadata?.lastName || "",
+    bio: user?.user_metadata?.bio || "",
+    phone: user?.user_metadata?.phone || "",
   });
 
-  const handleSave = () => {
-    toast({
-      variant: "success",
-      title: "Profile updated",
-      description: "Your changes have been saved successfully.",
-    });
-    setIsEditing(false);
+  const onDrop = useCallback((acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      setProfileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "image/*": [".jpeg", ".jpg", ".png", ".webp"],
+    },
+    maxFiles: 1,
+    maxSize: 5242880, // 5MB
+  });
+
+  const removeImage = () => {
+    setProfileImage(null);
+    setPreviewUrl(user?.user_metadata?.avatar_url || null);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      // TODO: Upload image to storage and get URL
+      // For now, we'll just update the text fields
+
+      dispatch(
+        updateUser({
+          user_metadata: {
+            ...user.user_metadata,
+            ...formData,
+            avatar_url: previewUrl,
+          },
+        })
+      );
+
+      toast({
+        variant: "success",
+        title: "Profile updated!",
+        description: "Your profile has been updated successfully.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
-      >
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold">My Profile</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage your personal information
-          </p>
-        </div>
-        {!isEditing && (
-          <Button
-            variant="hero"
-            onClick={() => setIsEditing(true)}
-            className="gap-2"
-          >
-            <Edit2 className="h-4 w-4" />
-            Edit Profile
-          </Button>
-        )}
-      </motion.div>
-
-      {/* Profile Card */}
-      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="glass rounded-2xl p-8 border border-border/50"
       >
-        {/* Avatar Section */}
-        <div className="flex flex-col md:flex-row items-center gap-8 mb-8 pb-8 border-b border-border/50">
-          <div className="relative group">
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">
+          Profile Settings
+        </h1>
+        <p className="text-muted-foreground">
+          Manage your personal information and profile picture
+        </p>
+      </motion.div>
+
+      {/* Form */}
+      <motion.form
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        onSubmit={handleSubmit}
+        className="bg-white rounded-2xl border border-gray-200 p-8 space-y-8"
+      >
+        {/* Profile Image Upload */}
+        <div>
+          <Label className="text-base font-semibold mb-4 block">
+            Profile Picture
+          </Label>
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            {/* Current/Preview Image */}
             <div className="relative">
-              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-primary via-primary/90 to-accent flex items-center justify-center ring-4 ring-primary/10 shadow-2xl">
-                <User className="h-16 w-16 text-primary-foreground" />
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="absolute -bottom-2 -right-2 p-3 rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-lg"
+              {previewUrl ? (
+                <div className="relative group">
+                  <img
+                    src={previewUrl}
+                    alt="Profile"
+                    className="w-32 h-32 rounded-2xl object-cover border-4 border-white shadow-lg"
+                  />
+                  {profileImage && (
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute -top-2 -right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center border-4 border-white shadow-lg">
+                  <User className="w-16 h-16 text-orange-600" />
+                </div>
+              )}
+            </div>
+
+            {/* Dropzone */}
+            <div className="flex-1 w-full">
+              <div
+                {...getRootProps()}
+                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
+                  isDragActive
+                    ? "border-orange-500 bg-orange-50"
+                    : "border-gray-300 hover:border-orange-400 hover:bg-gray-50"
+                }`}
               >
-                <Camera className="h-5 w-5" />
-              </motion.button>
-            </div>
-            <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-background" />
-          </div>
-
-          <div className="text-center md:text-left flex-1">
-            <h2 className="text-2xl font-bold mb-1">John Doe</h2>
-            <p className="text-muted-foreground mb-3">john@example.com</p>
-            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-              <div className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                Premium Member
-              </div>
-              <div className="px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-medium">
-                Verified
-              </div>
-              <div className="px-3 py-1 rounded-full bg-secondary text-sm">
-                Member since Jan 2024
+                <input {...getInputProps()} />
+                <Upload className="w-10 h-10 mx-auto mb-3 text-gray-400" />
+                {isDragActive ? (
+                  <p className="text-orange-600 font-medium">
+                    Drop your image here...
+                  </p>
+                ) : (
+                  <div>
+                    <p className="text-gray-700 font-medium mb-1">
+                      Click to upload or drag and drop
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      PNG, JPG, WEBP up to 5MB
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Form */}
+        {/* Personal Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <label className="text-sm font-semibold mb-3 block">
+          <div>
+            <Label htmlFor="firstName" className="mb-2">
               First Name
-            </label>
-            <div className="relative group">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-              <Input
-                value={formData.firstName}
-                onChange={(e) =>
-                  setFormData({ ...formData, firstName: e.target.value })
-                }
-                disabled={!isEditing}
-                className="pl-12 h-12 bg-secondary/30 border-border/50 hover:border-primary/50 transition-colors"
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.25 }}
-          >
-            <label className="text-sm font-semibold mb-3 block">
-              Last Name
-            </label>
-            <div className="relative group">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-              <Input
-                value={formData.lastName}
-                onChange={(e) =>
-                  setFormData({ ...formData, lastName: e.target.value })
-                }
-                disabled={!isEditing}
-                className="pl-12 h-12 bg-secondary/30 border-border/50 hover:border-primary/50 transition-colors"
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <label className="text-sm font-semibold mb-3 block">
-              Email Address
-            </label>
-            <div className="relative group">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                disabled={!isEditing}
-                className="pl-12 h-12 bg-secondary/30 border-border/50 hover:border-primary/50 transition-colors"
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.35 }}
-          >
-            <label className="text-sm font-semibold mb-3 block">
-              Phone Number
-            </label>
-            <div className="relative group">
-              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-              <Input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                disabled={!isEditing}
-                className="pl-12 h-12 bg-secondary/30 border-border/50 hover:border-primary/50 transition-colors"
-              />
-            </div>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-6"
-        >
-          <label className="text-sm font-semibold mb-3 block">Address</label>
-          <div className="relative group">
-            <MapPin className="absolute left-4 top-4 h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+            </Label>
             <Input
-              value={formData.address}
-              onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
-              }
-              disabled={!isEditing}
-              className="pl-12 h-12 bg-secondary/30 border-border/50 hover:border-primary/50 transition-colors"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              placeholder="Enter your first name"
+              className="h-12"
             />
           </div>
-        </motion.div>
 
-        {isEditing && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex justify-end gap-4 mt-8 pt-6 border-t border-border/50"
+          <div>
+            <Label htmlFor="lastName" className="mb-2">
+              Last Name
+            </Label>
+            <Input
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              placeholder="Enter your last name"
+              className="h-12"
+            />
+          </div>
+        </div>
+
+        {/* Email (Read-only) */}
+        <div>
+          <Label htmlFor="email" className="mb-2">
+            Email Address
+          </Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Input
+              id="email"
+              type="email"
+              value={user?.email || ""}
+              disabled
+              className="h-12 pl-10 bg-gray-50"
+            />
+          </div>
+          <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+        </div>
+
+        {/* Phone */}
+        <div>
+          <Label htmlFor="phone" className="mb-2">
+            Phone Number
+          </Label>
+          <Input
+            id="phone"
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleInputChange}
+            placeholder="+1 (555) 000-0000"
+            className="h-12"
+          />
+        </div>
+
+        {/* Bio */}
+        <div>
+          <Label htmlFor="bio" className="mb-2">
+            Bio
+          </Label>
+          <Textarea
+            id="bio"
+            name="bio"
+            value={formData.bio}
+            onChange={handleInputChange}
+            placeholder="Tell us about yourself..."
+            className="min-h-[120px] resize-none"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            {formData.bio.length}/500 characters
+          </p>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-end pt-4 border-t">
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8"
+            size="lg"
           >
-            <Button
-              variant="ghost"
-              onClick={() => setIsEditing(false)}
-              className="gap-2"
-            >
-              <X className="h-4 w-4" />
-              Cancel
-            </Button>
-            <Button variant="hero" onClick={handleSave} className="gap-2">
-              <Save className="h-4 w-4" />
-              Save Changes
-            </Button>
-          </motion.div>
-        )}
-      </motion.div>
-
-      {/* Additional Info */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="grid md:grid-cols-2 gap-6"
-      >
-        <div className="glass rounded-2xl p-6 border border-border/50">
-          <h3 className="font-bold text-lg mb-4">Account Statistics</h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Total Orders</span>
-              <span className="font-bold">24</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Total Spent</span>
-              <span className="font-bold">$2,847</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Saved Amount</span>
-              <span className="font-bold text-green-500">$542</span>
-            </div>
-          </div>
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>Save Changes</>
+            )}
+          </Button>
         </div>
-
-        <div className="glass rounded-2xl p-6 border border-border/50 bg-gradient-to-br from-primary/5 to-accent/5">
-          <h3 className="font-bold text-lg mb-4">Account Security</h3>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Two-Factor Auth</span>
-              <div className="px-2 py-1 rounded bg-green-500/20 text-green-600 text-xs font-medium">
-                Enabled
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Email Verified</span>
-              <div className="px-2 py-1 rounded bg-green-500/20 text-green-600 text-xs font-medium">
-                Verified
-              </div>
-            </div>
-            <Button variant="outline" size="sm" className="w-full mt-4">
-              Change Password
-            </Button>
-          </div>
-        </div>
-      </motion.div>
+      </motion.form>
     </div>
   );
 }

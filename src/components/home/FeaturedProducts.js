@@ -38,7 +38,7 @@ export const FeaturedProducts = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-blue-primary font-bold text-sm uppercase tracking-wider"
+              className="text-blue-primary  font-bold text-sm uppercase tracking-wider"
             >
               Featured Products
             </motion.span>
@@ -59,7 +59,7 @@ export const FeaturedProducts = () => {
             transition={{ delay: 0.2 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Button className="glass-button font-semibold" asChild>
+            <Button className="glass-button hover:text-blue-primary font-semibold" asChild>
               <Link href="/shop">View All Products</Link>
             </Button>
           </motion.div>

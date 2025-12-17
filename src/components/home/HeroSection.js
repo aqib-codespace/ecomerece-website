@@ -103,7 +103,7 @@ export const HeroSection = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button
-                  className="glass-button h-12 px-8 text-base font-semibold"
+                  className="glass-button hover:text-blue-primary h-12 px-8 text-base font-semibold"
                   asChild
                 >
                   <Link href="/categories">Explore Categories</Link>

@@ -132,7 +132,7 @@ export const ShopPage = () => {
                       : ""
                   }
                 >
-                  <Grid3X3 className="h-4 w-4" />
+                  <Grid3X3 className="h-5 w-5" />
                 </Button>
                 <Button
                   variant={viewMode === "list" ? "default" : "ghost"}
@@ -144,7 +144,7 @@ export const ShopPage = () => {
                       : ""
                   }
                 >
-                  <LayoutList className="h-4 w-4" />
+                  <LayoutList className="h-5 w-5" />
                 </Button>
               </div>
             </div>

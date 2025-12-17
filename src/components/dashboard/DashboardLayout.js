@@ -37,18 +37,18 @@ const sidebarLinks = [
     name: "Orders",
     href: "/dashboard/orders",
     icon: Package,
-    badge: "3",
+    badge: null,
   },
   {
     name: "Wishlist",
     href: "/dashboard/wishlist",
     icon: Heart,
-    badge: "8",
+    badge: null,
   },
   {
-    name: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
+    name: "Profile",
+    href: "/dashboard/profile",
+    icon: User,
     badge: null,
   },
 ];
