@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -18,68 +18,42 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { getProductById, getRelatedProducts } from "@/lib/mockData";
 
-const product = {
-  id: 1,
-  name: "Premium Wireless Headphones",
-  price: 299,
-  originalPrice: 399,
-  rating: 4.9,
-  reviews: 128,
-  description:
-    "Experience crystal-clear audio with our premium wireless headphones. Featuring advanced noise cancellation technology, 40-hour battery life, and ultra-comfortable ear cushions for all-day wear.",
-  images: [
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=800&fit=crop",
-    "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&h=800&fit=crop",
-    "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=800&fit=crop",
-  ],
-  category: "Electronics",
-  colors: ["Black", "White", "Navy"],
-  features: [
-    "Active Noise Cancellation",
-    "40-Hour Battery Life",
-    "Bluetooth 5.0",
-    "Foldable Design",
-    "Premium Leather Ear Cushions",
-  ],
-  stock: 15,
-};
-
-const relatedProducts = [
-  {
-    id: 2,
-    name: "Wireless Earbuds Pro",
-    price: 199,
-    image:
-      "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop",
-    rating: 4.7,
-  },
-  {
-    id: 3,
-    name: "Bluetooth Speaker",
-    price: 129,
-    image:
-      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
-    rating: 4.8,
-  },
-  {
-    id: 4,
-    name: "Smart Fitness Tracker",
-    price: 249,
-    image:
-      "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400&h=400&fit=crop",
-    rating: 4.9,
-  },
-];
-
-export default function ProductDetailPage() {
+export default function ProductDetailPage({ params }) {
   const { toast } = useToast();
   const router = useRouter();
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
+
+  console.log("ProductDetailPage - Params:", params, "ID:", params?.id);
+  const product = getProductById(params?.id);
+  console.log("ProductDetailPage - Product found:", product);
+  const relatedProducts = getRelatedProducts(params?.id, 3);
+
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const [selectedColor, setSelectedColor] = useState(
+    product?.colors?.[0] || ""
+  );
   const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    if (product?.colors?.[0]) {
+      setSelectedColor(product.colors[0]);
+    }
+  }, [product]);
+
+  if (!product) {
+    return (
+      <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-20 text-center">
+        <h1 className="text-4xl font-bold mb-4">Product Not Found</h1>
+        <p className="text-muted-foreground mb-8">
+          The product you're looking for doesn't exist.
+        </p>
+        <Button onClick={() => router.push("/shop")}>Back to Shop</Button>
+      </div>
+    );
+  }
 
   const handleAddToCart = () => {
     addToCart({ ...product, selectedColor }, quantity);
@@ -148,7 +122,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Product Info */}
         <div>
           <span className="text-sm text-primary font-medium uppercase tracking-wider">
             {product.category}
@@ -157,7 +130,6 @@ export default function ProductDetailPage() {
             {product.name}
           </h1>
 
-          {/* Rating */}
           <div className="flex items-center gap-2 mb-6">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -197,7 +169,6 @@ export default function ProductDetailPage() {
 
           <p className="text-muted-foreground mb-8">{product.description}</p>
 
-          {/* Color Selection */}
           <div className="mb-6">
             <h3 className="font-medium mb-3">Color: {selectedColor}</h3>
             <div className="flex gap-3">
@@ -217,7 +188,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Quantity */}
           <div className="mb-8">
             <h3 className="font-medium mb-3">Quantity</h3>
             <div className="flex items-center gap-4">
@@ -273,7 +243,6 @@ export default function ProductDetailPage() {
             </Button>
           </div>
 
-          {/* Features */}
           <div className="glass rounded-xl p-6 mb-8">
             <h3 className="font-semibold mb-4">Features</h3>
             <ul className="space-y-2">
@@ -289,7 +258,6 @@ export default function ProductDetailPage() {
             </ul>
           </div>
 
-          {/* Trust Badges */}
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-4 glass rounded-xl">
               <Truck className="h-6 w-6 mx-auto mb-2 text-primary" />
@@ -307,7 +275,6 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Related Products */}
       <section className="mt-20">
         <h2 className="text-2xl font-bold mb-8">You May Also Like</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

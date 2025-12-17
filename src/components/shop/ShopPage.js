@@ -7,9 +7,6 @@ import {
   SlidersHorizontal,
   Grid3X3,
   LayoutList,
-  Heart,
-  ShoppingCart,
-  Star,
   ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,105 +19,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ProductCard } from "@/components/shared/ProductCard";
+import { ProductCardList } from "@/components/shared/ProductCardList";
+import { shopProducts } from "@/lib/mockData";
 
-const allProducts = [
-  {
-    id: 1,
-    name: "Premium Wireless Headphones",
-    price: 299,
-    originalPrice: 399,
-    rating: 4.9,
-    reviews: 128,
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
-    category: "Electronics",
-    isNew: true,
-  },
-  {
-    id: 2,
-    name: "Minimalist Watch Collection",
-    price: 189,
-    originalPrice: null,
-    rating: 4.8,
-    reviews: 95,
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
-    category: "Accessories",
-    isNew: false,
-  },
-  {
-    id: 3,
-    name: "Designer Sunglasses",
-    price: 159,
-    originalPrice: 199,
-    rating: 4.7,
-    reviews: 64,
-    image:
-      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
-    category: "Fashion",
-    isNew: true,
-  },
-  {
-    id: 4,
-    name: "Smart Fitness Tracker",
-    price: 249,
-    originalPrice: null,
-    rating: 4.9,
-    reviews: 203,
-    image:
-      "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400&h=400&fit=crop",
-    category: "Electronics",
-    isNew: false,
-  },
-  {
-    id: 5,
-    name: "Leather Laptop Bag",
-    price: 179,
-    originalPrice: 229,
-    rating: 4.6,
-    reviews: 87,
-    image:
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop",
-    category: "Accessories",
-    isNew: false,
-  },
-  {
-    id: 6,
-    name: "Bluetooth Speaker",
-    price: 129,
-    originalPrice: null,
-    rating: 4.8,
-    reviews: 156,
-    image:
-      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
-    category: "Electronics",
-    isNew: true,
-  },
-  {
-    id: 7,
-    name: "Premium Coffee Maker",
-    price: 349,
-    originalPrice: 429,
-    rating: 4.9,
-    reviews: 78,
-    image:
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop",
-    category: "Home & Living",
-    isNew: false,
-  },
-  {
-    id: 8,
-    name: "Wireless Earbuds Pro",
-    price: 199,
-    originalPrice: null,
-    rating: 4.7,
-    reviews: 234,
-    image:
-      "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop",
-    category: "Electronics",
-    isNew: true,
-  },
-];
+const allProducts = shopProducts;
 
 const categories = [
   "All",
@@ -144,6 +47,14 @@ export const ShopPage = () => {
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState("grid");
   const [showFilters, setShowFilters] = useState(false);
+
+  const handleAddToCart = (product) => {
+    console.log("Add to cart:", product);
+  };
+
+  const handleAddToWishlist = (product) => {
+    console.log("Add to wishlist:", product);
+  };
 
   const filteredProducts = allProducts.filter((product) => {
     const matchesSearch = product.name
@@ -174,7 +85,6 @@ export const ShopPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-lightest/20 via-background to-orange-primary/5">
       <div className="w-full md:w-[95%] max-w-[1800px] mx-auto px-4 md:px-8 py-12">
-        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -188,7 +98,6 @@ export const ShopPage = () => {
           </p>
         </motion.div>
 
-        {/* Search and Filter Bar - Sticky */}
         <div className="sticky top-0 z-30 bg-gradient-to-br from-blue-lightest/20 via-background to-orange-primary/5 backdrop-blur-md pb-6 -mx-4 md:-mx-8 px-4 md:px-8 pt-6 mb-8">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
@@ -251,7 +160,6 @@ export const ShopPage = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Filters */}
           <motion.aside
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -327,109 +235,32 @@ export const ShopPage = () => {
                   : "grid-cols-1"
               }`}
             >
-              {sortedProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="group"
-                >
-                  <div
-                    className={`glass-card overflow-hidden ${
-                      viewMode === "list" ? "flex" : ""
-                    }`}
-                  >
-                    <div
-                      className={`relative overflow-hidden ${
-                        viewMode === "list" ? "w-56 shrink-0" : "aspect-square"
-                      }`}
-                    >
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {sortedProducts.map((product, index) => {
+                const motionProps = {
+                  layout: true,
+                  initial: { opacity: 0, scale: 0.9 },
+                  animate: { opacity: 1, scale: 1 },
+                  transition: { delay: index * 0.05 },
+                };
 
-                      <div className="absolute top-4 left-4 flex flex-col gap-2">
-                        {product.isNew && (
-                          <span className="px-3 py-1.5 bg-gradient-accent text-white text-xs font-bold rounded-lg shadow-lg animate-pulse">
-                            NEW
-                          </span>
-                        )}
-                        {product.originalPrice && (
-                          <span className="px-3 py-1.5 bg-gradient-primary text-white text-xs font-bold rounded-lg shadow-lg">
-                            SALE
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="h-10 w-10 glass-button hover:bg-blue-primary hover:text-white shadow-lg"
-                        >
-                          <Heart className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="p-5 flex-1">
-                      <span className="text-xs text-blue-primary font-semibold uppercase tracking-wider">
-                        {product.category}
-                      </span>
-                      <Link
-                        href={`/product/${product.id}`}
-                        className="block mt-2"
-                      >
-                        <h3 className="font-bold text-lg hover:text-blue-primary transition-colors line-clamp-1">
-                          {product.name}
-                        </h3>
-                      </Link>
-
-                      <div className="flex items-center gap-2 mt-3">
-                        <div className="flex items-center gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < Math.floor(product.rating)
-                                  ? "fill-orange-primary text-orange-primary"
-                                  : "fill-gray-light text-gray-light"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm font-semibold">
-                          {product.rating}
-                        </span>
-                        <span className="text-sm text-foreground-secondary">
-                          ({product.reviews})
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-3 mt-4">
-                        <span className="text-2xl font-bold gradient-text">
-                          ${product.price}
-                        </span>
-                        {product.originalPrice && (
-                          <span className="text-sm text-foreground-secondary line-through">
-                            ${product.originalPrice}
-                          </span>
-                        )}
-                      </div>
-
-                      <Button className="w-full mt-5 bg-gradient-primary hover:shadow-glow-blue transition-all duration-300">
-                        <ShoppingCart className="h-4 w-4 mr-2" />
-                        Add to Cart
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                return viewMode === "grid" ? (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onAddToWishlist={handleAddToWishlist}
+                    motionProps={motionProps}
+                  />
+                ) : (
+                  <ProductCardList
+                    key={product.id}
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onAddToWishlist={handleAddToWishlist}
+                    motionProps={motionProps}
+                  />
+                );
+              })}
             </motion.div>
 
             {sortedProducts.length === 0 && (
