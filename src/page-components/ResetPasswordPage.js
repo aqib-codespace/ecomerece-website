@@ -62,15 +62,16 @@ export default function ResetPasswordPage() {
       });
       if (error) throw error;
       toast({
+        variant: "success",
         title: "Password updated",
         description: "Your password has been reset.",
       });
       router.push("/login");
     } catch (err) {
       toast({
+        variant: "destructive",
         title: "Error",
         description: err.message || "Could not reset password.",
-        variant: "destructive",
       });
     } finally {
       setIsProcessing(false);

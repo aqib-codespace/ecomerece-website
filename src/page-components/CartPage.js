@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -12,75 +13,42 @@ import {
 } from "lucide-react";
 
 import { useToast } from "@/hooks/use-toast";
+import { useCartActions } from "@/hooks/useCartActions";
+import { selectCartItems, selectCartTotal } from "@/store/slices/cartSlice";
 import { Layout } from "@/components/layout/Layout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const initialCart = [
-  {
-    id: 1,
-    name: "Premium Wireless Headphones",
-    price: 299,
-    quantity: 1,
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop",
-    color: "Black",
-  },
-  {
-    id: 2,
-    name: "Minimalist Watch Collection",
-    price: 189,
-    quantity: 2,
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop",
-    color: "Silver",
-  },
-  {
-    id: 3,
-    name: "Designer Sunglasses",
-    price: 159,
-    quantity: 1,
-    image:
-      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop",
-    color: "Brown",
-  },
-];
-
 export default function Cart() {
   const { toast } = useToast();
-  const [cartItems, setCartItems] = useState(initialCart);
+  const cartItems = useSelector(selectCartItems);
+  const { removeFromCart, updateQuantity: updateCartQuantity } =
+    useCartActions();
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
 
-  const updateQuantity = (id, newQuantity) => {
+  const updateQuantity = (productId, newQuantity) => {
     if (newQuantity < 1) return;
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    updateCartQuantity(productId, newQuantity);
   };
 
-  const removeItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-    toast({
-      title: "Item removed",
-      description: "The item has been removed from your cart.",
-    });
+  const removeItem = (productId) => {
+    removeFromCart(productId);
   };
 
   const applyPromoCode = () => {
     if (promoCode.toUpperCase() === "SAVE20") {
       setDiscount(20);
       toast({
+        variant: "success",
         title: "Promo code applied!",
         description: "You saved 20% on your order.",
       });
     } else {
       toast({
+        variant: "destructive",
         title: "Invalid promo code",
         description: "Please check the code and try again.",
-        variant: "destructive",
       });
     }
   };
@@ -150,9 +118,11 @@ export default function Cart() {
                           >
                             {item.name}
                           </Link>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            Color: {item.color}
-                          </p>
+                          {item.colors && item.colors.length > 0 && (
+                            <p className="text-sm text-muted-foreground mt-1">
+                              Color: {item.colors[0]}
+                            </p>
+                          )}
                         </div>
                         <Button
                           variant="ghost"

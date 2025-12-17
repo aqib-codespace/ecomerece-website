@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,7 +20,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/Header";
-import { useAuth } from "@/contexts/AuthContext";
+import { selectUser, clearUser } from "@/store/slices/userSlice";
+import { clearCart } from "@/store/slices/cartSlice";
+import { clearWishlist } from "@/store/slices/wishlistSlice";
+import { supabase } from "@/lib/supabaseClient";
 import { Footer } from "../layout/Footer";
 
 const sidebarLinks = [
@@ -60,7 +64,16 @@ export default function DashboardLayout({ children }) {
   const [isDesktop, setIsDesktop] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+    dispatch(clearUser());
+    dispatch(clearCart());
+    dispatch(clearWishlist());
+    router.push("/login");
+  };
 
   useEffect(() => {
     const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);

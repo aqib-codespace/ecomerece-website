@@ -58,6 +58,7 @@ export default function SignupPage() {
       });
       if (error) throw error;
       toast({
+        variant: "success",
         title: "Check your email",
         description:
           "We sent a verification code to your email. Please check and enter it on the next page.",
@@ -65,9 +66,9 @@ export default function SignupPage() {
       router.push(`/verify?email=${encodeURIComponent(data.email)}`);
     } catch (err) {
       toast({
+        variant: "destructive",
         title: "Error",
         description: err.message || "Could not create account.",
-        variant: "destructive",
       });
     }
   };

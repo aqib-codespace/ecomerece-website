@@ -28,6 +28,7 @@ export default function ProfilePage() {
 
   const handleSave = () => {
     toast({
+      variant: "success",
       title: "Profile updated",
       description: "Your changes have been saved successfully.",
     });

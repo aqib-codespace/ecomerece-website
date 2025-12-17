@@ -3,14 +3,13 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCartActions } from "@/hooks/useCartActions";
+import { useWishlistActions } from "@/hooks/useWishlistActions";
 
-export const ProductCardList = ({
-  product,
-  onAddToCart,
-  onAddToWishlist,
-  motionProps = {},
-}) => {
+export const ProductCardList = ({ product, motionProps = {} }) => {
   const router = useRouter();
+  const { addToCart } = useCartActions();
+  const { toggleWishlist } = useWishlistActions();
 
   const handleCardClick = (e) => {
     if (e.target.closest("button")) {
@@ -22,16 +21,12 @@ export const ProductCardList = ({
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    if (onAddToCart) {
-      onAddToCart(product);
-    }
+    addToCart(product, 1);
   };
 
   const handleAddToWishlist = (e) => {
     e.stopPropagation();
-    if (onAddToWishlist) {
-      onAddToWishlist(product);
-    }
+    toggleWishlist(product);
   };
 
   return (

@@ -48,14 +48,6 @@ export const ShopPage = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [showFilters, setShowFilters] = useState(false);
 
-  const handleAddToCart = (product) => {
-    console.log("Add to cart:", product);
-  };
-
-  const handleAddToWishlist = (product) => {
-    console.log("Add to wishlist:", product);
-  };
-
   const filteredProducts = allProducts.filter((product) => {
     const matchesSearch = product.name
       .toLowerCase()
@@ -247,16 +239,12 @@ export const ShopPage = () => {
                   <ProductCard
                     key={product.id}
                     product={product}
-                    onAddToCart={handleAddToCart}
-                    onAddToWishlist={handleAddToWishlist}
                     motionProps={motionProps}
                   />
                 ) : (
                   <ProductCardList
                     key={product.id}
                     product={product}
-                    onAddToCart={handleAddToCart}
-                    onAddToWishlist={handleAddToWishlist}
                     motionProps={motionProps}
                   />
                 );

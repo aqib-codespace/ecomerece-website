@@ -49,15 +49,16 @@ export default function VerifyPage() {
       });
       if (error) throw error;
       toast({
+        variant: "success",
         title: "Email verified",
         description: "Verification successful. You can now sign in.",
       });
       router.push("/login");
     } catch (err) {
       toast({
+        variant: "destructive",
         title: "Error",
         description: err.message || "Verification failed.",
-        variant: "destructive",
       });
     }
   };

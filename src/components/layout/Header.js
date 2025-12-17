@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, Heart, User, Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/contexts/AuthContext";
-import { useCart } from "@/contexts/CartContext";
+import { selectCartCount } from "@/store/slices/cartSlice";
+import { selectWishlistCount } from "@/store/slices/wishlistSlice";
+import { selectIsAuthenticated } from "@/store/slices/userSlice";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -21,8 +23,11 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
-  const { isAuthenticated } = useAuth();
-  const { getCartCount } = useCart();
+
+  // Redux selectors
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const cartCount = useSelector(selectCartCount);
+  const wishlistCount = useSelector(selectWishlistCount);
 
   const isLoggedIn = pathname.startsWith("/dashboard");
 
@@ -134,11 +139,16 @@ export const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="glass-button h-10 w-10 hover:text-orange-primary"
+                  className="glass-button h-10 w-10 relative hover:text-orange-primary"
                   asChild
                 >
-                  <Link href="/wishlist">
+                  <Link href="/dashboard/wishlist">
                     <Heart className="h-5 w-5" />
+                    {wishlistCount > 0 && (
+                      <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-accent text-white text-xs font-bold flex items-center justify-center animate-pulse">
+                        {wishlistCount}
+                      </span>
+                    )}
                   </Link>
                 </Button>
               </motion.div>
@@ -155,9 +165,9 @@ export const Header = () => {
                 >
                   <Link href="/cart">
                     <ShoppingCart className="h-5 w-5" />
-                    {getCartCount() > 0 && (
+                    {cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-accent text-white text-xs font-bold flex items-center justify-center animate-pulse">
-                        {getCartCount()}
+                        {cartCount}
                       </span>
                     )}
                   </Link>
@@ -197,9 +207,9 @@ export const Header = () => {
                 >
                   <Link href="/cart">
                     <ShoppingCart className="h-5 w-5" />
-                    {getCartCount() > 0 && (
+                    {cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-accent text-white text-[10px] font-bold flex items-center justify-center">
-                        {getCartCount()}
+                        {cartCount}
                       </span>
                     )}
                   </Link>
@@ -270,17 +280,31 @@ export const Header = () => {
                   className="flex gap-3 mt-6"
                 >
                   <Button className="flex-1 glass-button" asChild>
-                    <Link href="/wishlist">
+                    <Link href="/dashboard/wishlist">
                       <Heart className="h-4 w-4 mr-2" />
                       Wishlist
+                      {wishlistCount > 0 && (
+                        <span className="ml-2 px-2 py-0.5 rounded-full bg-gradient-accent text-white text-xs font-bold">
+                          {wishlistCount}
+                        </span>
+                      )}
                     </Link>
                   </Button>
-                  <Button className="flex-1 btn-primary" asChild>
-                    <Link href="/login">
-                      <User className="h-4 w-4 mr-2" />
-                      Sign In
-                    </Link>
-                  </Button>
+                  {isAuthenticated ? (
+                    <Button className="flex-1 btn-primary" asChild>
+                      <Link href="/dashboard">
+                        <User className="h-4 w-4 mr-2" />
+                        Dashboard
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button className="flex-1 btn-primary" asChild>
+                      <Link href="/login">
+                        <User className="h-4 w-4 mr-2" />
+                        Sign In
+                      </Link>
+                    </Button>
+                  )}
                 </motion.div>
               </nav>
             </div>

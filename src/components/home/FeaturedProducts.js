@@ -22,12 +22,11 @@ const itemVariants = {
 
 export const FeaturedProducts = () => {
   const handleAddToCart = (product) => {
-    console.log('Add to cart:', product);
-
+    console.log("Add to cart:", product);
   };
 
   const handleAddToWishlist = (product) => {
-    console.log('Add to wishlist:', product);
+    console.log("Add to wishlist:", product);
   };
 
   return (
@@ -77,11 +76,9 @@ export const FeaturedProducts = () => {
             <ProductCard
               key={product.id}
               product={product}
-              onAddToCart={handleAddToCart}
-              onAddToWishlist={handleAddToWishlist}
               motionProps={{
                 variants: itemVariants,
-                whileHover: { y: -8 }
+                whileHover: { y: -8 },
               }}
             />
           ))}

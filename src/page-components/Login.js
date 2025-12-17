@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -19,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
+import { setUser } from "@/store/slices/userSlice";
 import { signIn } from "@/lib/auth";
 
 const loginSchema = z.object({
@@ -27,12 +28,10 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-
-
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { toast } = useToast();
-  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -46,18 +45,31 @@ export default function LoginPage() {
 
   const onSubmit = async (data) => {
     try {
-      const { data: res, error } = await signIn({ email: data.email, password: data.password });
+      const { data: res, error } = await signIn({
+        email: data.email,
+        password: data.password,
+      });
       if (error) throw error;
       const user = res.user || res.session?.user;
-      login(user);
-      toast({ title: "Welcome back!", description: "You have successfully logged in." });
+
+      // Dispatch user to Redux store
+      dispatch(setUser(user));
+
+      toast({
+        variant: "success",
+        title: "Welcome back!",
+        description: "You have successfully logged in.",
+      });
       router.push("/dashboard");
     } catch (error) {
-      toast({ title: "Error", description: error?.message || "Something went wrong. Please try again.", variant: "destructive" });
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          error?.message || "Something went wrong. Please try again.",
+      });
     }
   };
-
-
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 lg:p-8">
@@ -161,13 +173,15 @@ export default function LoginPage() {
           </Link>
 
           <div className="mb-8">
-            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">Welcome Back!</h1>
-            <p className="text-foreground-secondary">Sign in to access your account</p>
+            <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">
+              Welcome Back!
+            </h1>
+            <p className="text-foreground-secondary">
+              Sign in to access your account
+            </p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
-
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">
                 Email
@@ -217,8 +231,6 @@ export default function LoginPage() {
               )}
             </div>
 
-
-
             <div className="flex justify-end">
               <Link
                 href="/forgot-password"
@@ -245,7 +257,15 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-8 text-center">
-            <p className="text-foreground-secondary">Don't have an account? <Link href="/signup" className="text-blue-primary hover:text-blue-dark font-semibold transition-colors">Sign up</Link></p>
+            <p className="text-foreground-secondary">
+              Don't have an account?{" "}
+              <Link
+                href="/signup"
+                className="text-blue-primary hover:text-blue-dark font-semibold transition-colors"
+              >
+                Sign up
+              </Link>
+            </p>
           </div>
 
           {/* Back to Home */}

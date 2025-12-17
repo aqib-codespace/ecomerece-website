@@ -49,6 +49,7 @@ export default function WishlistPage() {
   const removeFromWishlist = (id) => {
     setWishlist((prev) => prev.filter((item) => item.id !== id));
     toast({
+      variant: "success",
       title: "Removed from wishlist",
       description: "Item has been removed from your wishlist.",
     });
@@ -56,6 +57,7 @@ export default function WishlistPage() {
 
   const addToCart = (item) => {
     toast({
+      variant: "success",
       title: "Added to cart",
       description: `${item.name} has been added to your cart.`,
     });
@@ -64,6 +66,7 @@ export default function WishlistPage() {
   const addAllToCart = () => {
     const inStockItems = wishlist.filter((item) => item.inStock);
     toast({
+      variant: "success",
       title: "Items added to cart",
       description: `${inStockItems.length} items have been added to your cart.`,
     });

@@ -1,11 +1,12 @@
 "use client";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { CartProvider } from "@/contexts/CartContext";
+import { ReduxProvider } from "@/store/ReduxProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function Providers({ children }) {
   return (
-    <AuthProvider>
-      <CartProvider>{children}</CartProvider>
-    </AuthProvider>
+    <ReduxProvider>
+      {children}
+      <Toaster />
+    </ReduxProvider>
   );
 }

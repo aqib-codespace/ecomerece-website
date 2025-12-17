@@ -65,6 +65,7 @@ export default function CheckOut() {
     if (step < 3) setStep(step + 1);
     else {
       toast({
+        variant: "success",
         title: "Order placed successfully!",
         description:
           "Thank you for your purchase. You will receive a confirmation email shortly.",

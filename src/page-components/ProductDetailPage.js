@@ -15,16 +15,15 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "@/store/slices/userSlice";
+import { useCartActions } from "@/hooks/useCartActions";
 import { getProductById, getRelatedProducts } from "@/lib/mockData";
 
 export default function ProductDetailPage({ params }) {
-  const { toast } = useToast();
   const router = useRouter();
-  const { addToCart } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { addToCart } = useCartActions();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   console.log("ProductDetailPage - Params:", params, "ID:", params?.id);
   const product = getProductById(params?.id);
@@ -61,12 +60,11 @@ export default function ProductDetailPage({ params }) {
 
   const handleBuyNow = () => {
     if (!isAuthenticated) {
-      toast({
-        title: "Please login",
-        description: "You need to login to proceed with checkout.",
-        variant: "destructive",
-      });
-      router.push("/login");
+      // Save reference to current product
+      const returnUrl = encodeURIComponent(`/product/${product.id}`);
+      router.push(
+        `/login?returnUrl=${returnUrl}&action=buy&productId=${product.id}`
+      );
       return;
     }
     addToCart({ ...product, selectedColor }, quantity);
