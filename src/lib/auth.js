@@ -1,6 +1,12 @@
 import { supabase } from "./supabaseClient";
 
-export async function signUp({ email, password, firstName, lastName, username }) {
+export async function signUp({
+  email,
+  password,
+  firstName,
+  lastName,
+  username,
+}) {
   // Passing user metadata
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -26,14 +32,18 @@ export async function signOut() {
 }
 
 export async function sendPasswordResetEmail(email) {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (typeof window !== "undefined"
+      ? window.location.origin
+      : "http://localhost:3000");
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`,
+    redirectTo: `${siteUrl}/reset-password`,
   });
   return { data, error };
 }
 
 export async function verifyOtp({ email, token }) {
-
   const { data, error } = await supabase.auth.verifyOtp({
     email,
     token,
